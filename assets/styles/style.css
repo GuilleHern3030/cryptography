@@ -1,0 +1,137 @@
+:root {
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424 !important;
+}
+
+main {
+    margin: 1rem;
+}
+
+.form {
+    font-size: 24px;
+    user-select: none;
+    min-width: min-content;
+}
+
+.form__options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 1em;
+}
+
+.form input, .form textarea {
+    padding: 5px;
+    margin: .5em 0;
+    border-radius: 5px;
+    resize: none;
+}
+
+.textarea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.textarea textarea { height: 30vw; max-height: 250px; }
+@media only screen and (max-width: 480px) { 
+    .textarea textarea { height: 150px; } 
+    .form #password { width: 50vw; }
+}
+
+@media only screen and (max-width: 360px) {
+    .form__options { flex-direction: column; }
+    .form #password { width: 150px; }
+}
+
+.submit {
+    display: grid;
+    place-items: center;
+}
+
+.button {
+    color: rgba(255, 255, 255, 0.87);
+    margin: 2rem 0;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 0.3em 0.6em;
+    background-color: rgb(26, 67, 139);
+    cursor: pointer;
+    outline: 1px solid black;
+    transition: outline 0.25s;
+    transition: background-color 0.2s;
+    transition: transform 0.1s;
+}
+
+.button:hover {
+    outline: 4px auto #646cff;
+    background-color: rgb(29, 75, 153);
+    transform: scale(1.025)
+}
+
+.radio-button {
+    cursor: pointer;
+}
+
+.radio-button:hover {
+    background-color: #e8e8e8;
+    scale: 1.15
+}
+
+hr {
+    margin: 1rem 0;
+}
+
+#result {
+    font-size: 24px;
+    width: 95vw;
+    height: min-content;
+    background-color: transparent;
+    border-color: transparent;
+    color: rgba(255, 255, 255, 0.87);
+    outline: transparent;
+    resize: none;
+    overflow-wrap: break-word; /* Dividir el texto en palabras si es necesario */
+}
+
+.warning {
+    font-size: 20px;
+    color:brown;
+}
+
+.empty {
+    font-size: 16px;
+    padding: 0 .2em;
+    margin: 0 1em;
+    background-color: rgb(11, 90, 63);
+}
+
+.file-input {
+    margin: 0 1em !important;
+    padding: 0 !important;
+    font-size: 16px;
+    text-align: center;
+}
+
+#save-file {
+    background-color: rgb(9, 83, 9);
+}
+
+.drop-advisor {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    user-select: none;
+    background-color: #242424cd;
+    font-size: 50px;
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}

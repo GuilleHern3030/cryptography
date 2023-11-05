@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" />
+    <title>Cryptography</title>
+    <link href="./assets/styles/normalize.css" rel="stylesheet">
+    <link href="./assets/styles/header.css" rel="stylesheet">
+    <link href="./assets/styles/scroll-design.css" rel="stylesheet">
+    <link href="./assets/styles/style.css" rel="stylesheet">
+	<script src="./scripts/download.js"></script>
+	<script src="./scripts/readtext.js"></script>
+	<script src="./scripts/Cryptography.js"></script>
+	<script src="./scripts/index.js"></script>
+</head>
+
+<body>
+    
+    <header>
+        <div class="header-top"></div>
+        <h1>Cryptography</h1>
+        <div class="header-bottom"></div>
+    </header>
+
+    <main>
+        
+        <section class="form">
+            <div class="form__options">
+                <div> 
+                    <p>Password</p> 
+                    <input id="password" type="password"> 
+                    <p class="psw-warning warning hidden">* You must fill out this field</p>
+                </div>
+                <div>
+                    <div>
+                        <input class="radio-button" type="radio" id="post" name="requestType" value="post" checked>
+                        <label for="post">Encrypt</label>
+                    </div>
+                    <div>
+                        <input class="radio-button" type="radio" id="get" name="requestType" value="get">
+                        <label for="get">Decrypt</label>
+                    </div>
+                </div>
+            </div>
+            <div class="textarea text-to-encrypt"> 
+                <div style="display:flex">
+                    <p>Text to encrypt</p> 
+                    <button class="button empty" id="empty-encrypt">clean</button>
+                    <input type="file" name="file" class="file-input" id="file-encrypt"/>
+                </div>
+                <textarea id="text-to-encrypt" type="text"></textarea> 
+            </div>
+            <div class="textarea text-to-decrypt hidden"> 
+                <div style="display:flex">
+                    <p>Text to decrypt</p> 
+                    <button class="button empty" id="empty-decrypt">clean</button>
+                    <input type="file" name="file" class="file-input" id="file-decrypt"/>
+                </div>
+                <textarea id="text-to-decrypt" type="text"></textarea> 
+            </div>
+            <div class="submit">
+                <button class="button" id="submit">Submit</button>
+            </div>
+        </section>
+        <section>
+            <p readonly id="result"></p>
+            <div class="submit">
+                <button class="button hidden" id="save-file">Save</button>
+            </div>
+        </section>
+
+        <aside class="drop-advisor hidden">
+            <p>You can now drop the file</p>
+        </aside>
+
+    </main>
+    
+</body>
+</html>

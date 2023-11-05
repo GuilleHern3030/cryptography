@@ -1,0 +1,41 @@
+/*
+    <header>
+        <div class="header-top"></div>
+        <h1 class="titulo">Organizador de horarios</h1>
+        <div class="header-bottom"></div>
+    </header>
+*/
+
+:root {
+    --header-line-padding: 0.21rem;
+    --header-background-color: black;
+    --header-line-color: rgb(238, 255, 1);
+    --header-text-color: white;
+    --header-padding-vertical: .4em;
+}
+
+header h1 {
+    font-size: 2.8rem;
+    text-align: center;
+    margin: var(--header-padding-vertical)
+}
+
+header h1 span {
+    margin-left: .6rem;
+    font-size: 1.3rem;
+}
+
+header {
+    user-select: none;
+    background-color: var(--header-background-color);
+    color: var(--header-text-color);
+}
+
+.header-top {
+    padding: var(--header-line-padding);
+}
+
+.header-bottom {
+    padding: var(--header-line-padding);
+    background-color: var(--header-line-color);
+}
