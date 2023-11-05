@@ -27,6 +27,11 @@ main {
     resize: none;
 }
 
+.label {
+    display: flex;
+    flex-direction: row;
+}
+
 .textarea {
     display: flex;
     flex-direction: column;
@@ -37,6 +42,8 @@ main {
 @media only screen and (max-width: 480px) { 
     .textarea textarea { height: 150px; } 
     .form #password { width: 50vw; }
+    .label { flex-direction: column; }
+    .label * { margin: .5em 0 !important }
 }
 
 @media only screen and (max-width: 360px) {
