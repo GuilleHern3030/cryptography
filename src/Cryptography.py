@@ -125,11 +125,16 @@ def __encrypt__(encrypted: list) -> str:
     return encryptedText
 
 def __decrypt__(encrypted: str) -> list:
-    ccLimit = int(encrypted[0:encrypted.index("_")])
+    try: 
+        _index = encrypted.index("_")
+        ccLimit = int(encrypted[0:_index])
+    except: 
+        _index = 0
+        ccLimit = 255
     dictionary = __dictionary__(ccLimit, False)
     lettersGroup = len(dictionary[0])
     encryptedList = [ccLimit]
-    for l in range(encrypted.index("_")+1, len(encrypted), lettersGroup):
+    for l in range(_index+1, len(encrypted), lettersGroup):
         letter = encrypted[l:l+lettersGroup]
         i = dictionary.index(letter.upper())
         encryptedList.append(i)
@@ -199,37 +204,41 @@ class Cryptography:
         return __parseCryptoCharToString__(_cryptoChar)
 
     def decrypt(self, encryptedText:str) -> str:
-        encryptText = __decrypt__(encryptedText)
-        textDecrypted = ""
-        if isinstance(encryptText, list) and len(encryptText) > 1:
-            ccLimit = encryptText[0]
-            i = 1
-            while i < len(encryptText):
-                textDecrypted += self.__decryptCharAndParse__(int(encryptText[i]), i, ccLimit)
-                i += 1
-        return textDecrypted
+        try:
+            encryptText = __decrypt__(encryptedText)
+            textDecrypted = ""
+            if isinstance(encryptText, list) and len(encryptText) > 1:
+                ccLimit = encryptText[0]
+                i = 1
+                while i < len(encryptText):
+                    textDecrypted += self.__decryptCharAndParse__(int(encryptText[i]), i, ccLimit)
+                    i += 1
+            return textDecrypted
+        except: return ""
 
     def encrypt(self, text:str) -> list:
-        text = str(text)
-        if len(text) == 0: text = " "
-        textEncrypted = []
-        ecfmax = self.frequencyRangeNullMax
-        ecfmin = self.frequencyRangeNullMin
-        ccLimit = __getMaxCharId__(text)
-        textEncrypted.append(ccLimit)
-        r = randint(ecfmin, ecfmax) - ecfmin
-        _chr = 0
-        iteration = 1
-        while _chr < len(text):
-            if r >= ecfmax:
-                textEncrypted.append(self.__encryptChar__(str(text[_chr]), iteration, ccLimit, False))
-                r = randint(ecfmin, ecfmax) - ecfmin
-                _chr += 1
-            else:
-                textEncrypted.append(self.__encryptChar__(str(text[_chr]), iteration, ccLimit, True))
-                r += 1
-            iteration += 1
-        return __encrypt__(textEncrypted)
+        try:
+            text = str(text).replace('\t', '    ').rstrip()
+            if len(text) == 0: text = " "
+            textEncrypted = []
+            ecfmax = self.frequencyRangeNullMax
+            ecfmin = self.frequencyRangeNullMin
+            ccLimit = __getMaxCharId__(text)
+            textEncrypted.append(ccLimit)
+            r = randint(ecfmin, ecfmax) - ecfmin
+            _chr = 0
+            iteration = 1
+            while _chr < len(text):
+                if r >= ecfmax:
+                    textEncrypted.append(self.__encryptChar__(str(text[_chr]), iteration, ccLimit, False))
+                    r = randint(ecfmin, ecfmax) - ecfmin
+                    _chr += 1
+                else:
+                    textEncrypted.append(self.__encryptChar__(str(text[_chr]), iteration, ccLimit, True))
+                    r += 1
+                iteration += 1
+            return __encrypt__(textEncrypted)
+        except: return ""
     
 if __name__ == "__main__":
     print("Write the text to encrypt")
