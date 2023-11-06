@@ -5,7 +5,7 @@ window.onload = () => {
     const password = document.getElementById('password')
     const warning = document.getElementById('warning')
     const getPassword = () => password.value;
-    const showWarning = (text="") => { warning.style.color = '#a52a2a'; warning.innerText = text };
+    const showWarning = (text="") => { warning.style.color = '#d61c1c'; warning.innerText = text };
     const hideWarning = () => warning.style.color = '#242424'
 
     const textToEncrypt = document.getElementById("text-to-encrypt")
