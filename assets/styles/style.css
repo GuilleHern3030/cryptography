@@ -16,7 +16,7 @@ main {
 .form__options {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
     margin-bottom: 1em;
 }
 
@@ -27,29 +27,10 @@ main {
     resize: none;
 }
 
-.label {
-    display: flex;
-    flex-direction: row;
-}
-
 .textarea {
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-
-.textarea textarea { height: 30vw; max-height: 250px; }
-@media only screen and (max-width: 480px) { 
-    .textarea textarea { height: 150px; } 
-    .form #password { width: 50vw; }
-    .label { flex-direction: column; }
-    .label * { margin: .5em 0 !important }
-    .label input { font-size: 12px; }
-}
-
-@media only screen and (max-width: 360px) {
-    .form__options { flex-direction: column; }
-    .form #password { width: 150px; }
 }
 
 .submit {
@@ -115,8 +96,13 @@ hr {
     background-color: rgb(11, 90, 63);
 }
 
+.empty:hover {
+    background-color: rgb(15, 126, 87);
+    transform: scale(1.025)
+}
+
 .file-input {
-    margin: 0 1em !important;
+    margin: .5em 0 !important;
     padding: 0 !important;
     font-size: 16px;
     text-align: center;
@@ -142,4 +128,23 @@ hr {
 
 .hidden {
     display: none !important;
+}
+
+.textarea textarea { height: 30vw; max-height: 250px; }
+@media only screen and (max-width: 480px) { 
+    .textarea textarea { height: 150px; } 
+    .form #password { width: 50vw; }
+    .label { font-size: 22px; }
+}
+
+@media only screen and (max-width: 360px) {
+    .form__options { display: block  }
+    .form #password { width: 150px; }
+    .textarea textarea { width: 90vw !important; }
+    .file-input { font-size: 4vw; }
+}
+
+@media only screen and (min-width: 480px) {
+    .form__options { justify-content: flex-start; }
+    .rb-div { margin-left: 1em; }
 }

@@ -33,7 +33,7 @@
                     <input id="password" type="password"> 
                     <p class="psw-warning warning hidden">* You must fill out this field</p>
                 </div>
-                <div>
+                <div class="rb-div">
                     <div>
                         <input class="radio-button" type="radio" id="post" name="requestType" value="post" checked>
                         <label for="post">Encrypt</label>
@@ -45,20 +45,16 @@
                 </div>
             </div>
             <div class="textarea text-to-encrypt"> 
-                <div class="label">
-                    <p>Text to encrypt</p> 
-                    <input type="file" name="file" class="file-input" id="file-encrypt"/>
-                    <button class="button empty" id="empty-encrypt">clean</button>
-                </div>
+                <p class="label">Text to encrypt</p> 
+                <input class="file-input" type="file" name="file" id="file-encrypt"/>
                 <textarea id="text-to-encrypt" type="text"></textarea> 
+                <button class="button empty" id="empty-encrypt">clean</button>
             </div>
             <div class="textarea text-to-decrypt hidden"> 
-                <div class="label">
-                    <p>Text to decrypt</p> 
-                    <input type="file" name="file" class="file-input" id="file-decrypt"/>
-                    <button class="button empty" id="empty-decrypt">clean</button>
-                </div>
+                <p class="label">Text to decrypt</p> 
+                <input class="file-input" type="file" name="file" id="file-decrypt"/>
                 <textarea id="text-to-decrypt" type="text"></textarea> 
+                <button class="button empty" id="empty-decrypt">clean</button>
             </div>
             <div class="submit">
                 <button class="button" id="submit">Submit</button>
