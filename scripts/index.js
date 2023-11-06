@@ -3,14 +3,14 @@ const HIDE_CLASS = 'hidden';
 window.onload = () => {
 
     const password = document.getElementById('password')
-    const passwordWarning = document.querySelector('.psw-warning')
+    const warning = document.getElementById('warning')
     const getPassword = () => password.value;
-    const showPasswordWarning = () => passwordWarning.classList.toggle(HIDE_CLASS, false)
-    const hidePasswordWarning = () => passwordWarning.classList.toggle(HIDE_CLASS, true)
+    const showWarning = (text="") => { warning.style.color = '#a52a2a'; warning.innerText = text };
+    const hideWarning = () => warning.style.color = '#242424'
 
-    const textToEncrypt = document.querySelector("#text-to-encrypt")
+    const textToEncrypt = document.getElementById("text-to-encrypt")
     const textToEncryptContainer = document.querySelector(".text-to-encrypt")
-    const bEmptyEncrypt = document.querySelector('#empty-encrypt')
+    const bEmptyEncrypt = document.getElementById('empty-encrypt')
     const getTextToEncrypt = () => textToEncrypt.value;
     const showTextToEncrypt = () => textToEncryptContainer.classList.toggle(HIDE_CLASS, false)
     const hideTextToEncrypt = () => textToEncryptContainer.classList.toggle(HIDE_CLASS, true)
@@ -18,9 +18,9 @@ window.onload = () => {
     const setTextToEncrypt = text => textToEncrypt.value = text;
     bEmptyEncrypt.addEventListener("click", emptyTextToEncrypt)
 
-    const textToDecrypt = document.querySelector("#text-to-decrypt")
+    const textToDecrypt = document.getElementById("text-to-decrypt")
     const textToDecryptContainer = document.querySelector(".text-to-decrypt")
-    const bEmptyDecrypt = document.querySelector('#empty-decrypt')
+    const bEmptyDecrypt = document.getElementById('empty-decrypt')
     const getTextToDecrypt = () => textToDecrypt.value;
     const showTextToDecrypt = () => textToDecryptContainer.classList.toggle(HIDE_CLASS, false)
     const hideTextToDecrypt = () => textToDecryptContainer.classList.toggle(HIDE_CLASS, true)
@@ -38,13 +38,14 @@ window.onload = () => {
     const showSaveButton = () => saveButton.classList.toggle(HIDE_CLASS, false)
     const hideSaveButton = () => saveButton.classList.toggle(HIDE_CLASS, true)
     const getResult = () => resultParagraph.innerText;
+    const hideResult = () => resultParagraph.innerText = "";
     const setResult = text => {
         resultParagraph.innerText = text;
         saveButton.classList.toggle(HIDE_CLASS, false)
     }
 
-    const encryptRadioButton = document.querySelector('#post')
-    const decryptRadioButton = document.querySelector('#get')
+    const encryptRadioButton = document.getElementById('post')
+    const decryptRadioButton = document.getElementById('get')
     encryptRadioButton.addEventListener("click", () => { hideTextToDecrypt(); showTextToEncrypt(); })
     decryptRadioButton.addEventListener("click", () => { hideTextToEncrypt(); showTextToDecrypt(); })
     const getRadioButtonSelected = (name="requestType") => {
@@ -55,26 +56,36 @@ window.onload = () => {
     }    
 
     const encrypt = text => {
-        if (getPassword().length > 0) {
-            hidePasswordWarning()
-            const cryptography = new Cryptography(getPassword())
-            const result = cryptography.encrypt(getTextToEncrypt() || text)
-            setResult(result)
-            showSaveButton()
-        } else showPasswordWarning()
+        hideResult()
+        const textToProcess = getTextToEncrypt().length > 0 ? getTextToEncrypt() : text;
+        if (textToProcess.length > 0) {
+            if (getPassword().length > 0) {
+                hideWarning()
+                const cryptography = new Cryptography(getPassword())
+                const result = cryptography.encrypt(textToProcess)
+                setResult(result)
+                showSaveButton()
+                scrollSlowlyTo(resultParagraph)
+            } else showWarning('* Password is required')
+        } else showWarning('* Text is required')
     }
 
     const decrypt = text => {
-        if (getPassword().length > 0) {
-            hidePasswordWarning()
-            const cryptography = new Cryptography(getPassword())
-            const result = cryptography.decrypt(getTextToDecrypt() || text)
-            setResult(result)
-            hideSaveButton()
-        } else showPasswordWarning()
+        hideResult()
+        const textToProcess = getTextToDecrypt().length > 0 ? getTextToDecrypt() : text;
+        if (textToProcess.length > 0) {
+            if (getPassword().length > 0) {
+                hideWarning()
+                const cryptography = new Cryptography(getPassword())
+                const result = cryptography.decrypt(textToProcess)
+                setResult(result)
+                hideSaveButton()
+                scrollSlowlyTo(resultParagraph)
+            } else showWarning('* Password is required')
+        } else showWarning('* Text is required')
     }
 
-    const dropAdvisor = document.querySelector(".drop-advisor")
+    const dropAdvisor = document.getElementById("drop-advisor")
     const showDropAdvisor = () => dropAdvisor.classList.toggle(HIDE_CLASS, false)
     const hideDropAdvisor = () => dropAdvisor.classList.toggle(HIDE_CLASS, true)
     const body = document.getElementsByTagName('body')[0]
@@ -93,10 +104,8 @@ window.onload = () => {
 
     const submitButton = document.getElementById('submit')
     submitButton.addEventListener("click", () => {
-        if (getRadioButtonSelected() == 'post')
-            encrypt(getTextToEncrypt())
-        else
-            decrypt(getTextToDecrypt())
+        if (getRadioButtonSelected() == 'post') encrypt(getTextToEncrypt())
+        else decrypt(getTextToDecrypt())
     })
 
     saveButton.addEventListener("click", () => {
