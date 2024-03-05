@@ -28,7 +28,7 @@ export default class Cryptography {
             this.#frequencyRangeNullMax = frequencyMin;
             this.#frequencyRangeNullMin = frequencyMax;
         }
-        if(this.#frequencyRangeNullMax == 0) this.#frequencyRangeNullMax = 1;
+        //if(this.#frequencyRangeNullMax == 0) this.#frequencyRangeNullMax = 1;
     }
 
     encrypt(text) {
@@ -39,7 +39,7 @@ export default class Cryptography {
                 if (text.length == 0) text = " ";
                 const ecfmin = this.#frequencyRangeNullMin;
                 const ecfmax = this.#frequencyRangeNullMax;
-                const ccLimit = getMaxCharInText(text);
+                const ccLimit = getMaxCharInText(text, ecfmin != ecfmax);
                 textEncrypted = [ccLimit]
                 let r = randomInt(ecfmin, ecfmax)
                 let chr = 0;
@@ -167,7 +167,7 @@ function decryptChar(cryptoChar, iteration, ccLimit, c, d, so) {
     const x = Number(int((iter%c.length)));
     const y = Number(int(int(iter/c.length)%c.length));
     const z = Number(int(int(iter/c.length)/c.length));
-    const soi = Number(int(((so+iter)*(z+ccLim))*c[x]/d[y]));
+    let soi = Number(int(((so+iter)*(z+ccLim))*c[x]/d[y]));
     if(soi < 0) soi *= -1;
     let integer = Number(int((int((soi)*c[y]/d[x]) + Number(cryptoChar)) % ccLim));
     if(integer < CC_START) integer = int(integer*(ccLim-CC_START)/CC_START)+CC_START;
@@ -177,7 +177,7 @@ function decryptChar(cryptoChar, iteration, ccLimit, c, d, so) {
 const randomInt = (min = 0, max = 10) => Math.floor(Math.random() * max) + min;
 const int = (aNumber) => Math.floor(aNumber);
 
-function getMaxCharInText(text) { // int
+function getMaxCharInText(text, randomize=true) { // int
     let maxChar = 0;
     try {
         if (text.length > 0) {
@@ -188,7 +188,8 @@ function getMaxCharInText(text) { // int
         }
     } catch(exception) { maxChar = 255; }
     if(maxChar < CC_START) maxChar = 255;
-    maxChar += randomInt(0, MAX_CHARACTERS) + CC_START;
+    maxChar += CC_START;
+    if (randomize) maxChar += randomInt(0, MAX_CHARACTERS);
     return Number(maxChar);
 }
 
@@ -218,7 +219,7 @@ function encryptChar(character, iteration, ccLimit, falseEncrypt, c, d, so) {
         const x = Number(int((iter%c.length)));
         const y = Number(int(int(iter/c.length)%c.length));
         const z = Number(int(int(iter/c.length)/c.length));
-        const soi = Number(int(((Number(so)+iter)*(z+ccLim))*c[x]/d[y]));
+        let soi = Number(int(((Number(so)+iter)*(z+ccLim))*c[x]/d[y]));
         if(soi < 0) soi *= -1;
         let tmp = 0;
         let cryptoChar = parseCharToCryptoChar(character);
@@ -248,23 +249,43 @@ function _dictionary(ccLimit, randomCase=true) {
     return dictionary
 }
 
+function _ccToStr(numero) {
+    let numeroComoString = numero.toString();
+    let letras = '';
+    for (let i = 0; i < numeroComoString.length; i++) {
+        let digito = parseInt(numeroComoString.charAt(i));
+        let letra = String.fromCharCode('a'.charCodeAt(0) + digito);
+        letras += letra;
+    }
+    return letras;
+}
+
+function _ccFromStr(letras) {
+    let numero = '';
+    for (let i = 0; i < letras.length; i++) {
+        let letra = letras.charAt(i);
+        let valorNumerico = letra.charCodeAt(0) - 'a'.charCodeAt(0);
+        numero += valorNumerico;
+    }
+    return parseInt(numero);
+}
+
 function _encrypt(encrypted) {
     const ccLimit = encrypted.shift()
     const dictionary = _dictionary(ccLimit)
-    let encryptedText = ccLimit + "_"
+    let encryptedText = _ccToStr(ccLimit) + "x"
     for (let char of encrypted) {
-        //console.log(char)
         encryptedText = encryptedText + dictionary[char]
     }
     return encryptedText
 }
 
 function _decrypt(encrypted) {
-    const ccLimit = Number(encrypted.substring(0, encrypted.indexOf("_")))
+    const ccLimit = _ccFromStr(encrypted.substring(0, encrypted.indexOf("x")))
     const dictionary = _dictionary(ccLimit, false)
     const lettersGroup = dictionary[0].length
     const encryptedList = [ccLimit]
-    for (let l = encrypted.indexOf("_")+1; l < encrypted.length; l += lettersGroup) {
+    for (let l = encrypted.indexOf("x")+1; l < encrypted.length; l += lettersGroup) {
         const letter = encrypted.substring(l,l+lettersGroup);
         const i = dictionary.indexOf(letter.toUpperCase())
         encryptedList.push(i)

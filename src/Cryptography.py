@@ -71,7 +71,7 @@ def __getSO__(c: list, length:int) -> int:
         so += (int(str(oct(int(c[i])))[2:]) * (i+11))
     return so
 
-def __getMaxCharId__(text: str) -> int:
+def __getMaxCharId__(text: str, randomize: bool) -> int:
     maxChar = 0
     try:
         text = str(text)
@@ -79,7 +79,8 @@ def __getMaxCharId__(text: str) -> int:
             for l in text:
                 if ord(l) > maxChar:
                     maxChar = ord(l)
-            maxChar += 2 + randint(0, MAX_CHARACTERS)
+            maxChar += 2
+            if randomize: maxChar += randint(0, MAX_CHARACTERS)
     except:
         maxChar = 255
     return maxChar
@@ -117,17 +118,30 @@ def __dictionary__(ccLimit:int, randomCase:bool=True) -> str:
         dictionary.append(l)
     return dictionary
 
+def __ccToStr__(ccLimit:int) -> str:
+    cc = str(ccLimit)
+    _ord = ""
+    for i in range(len(cc)): 
+        _ord = _ord + chr(int(cc[i]) + 97)
+    return _ord
+
+def __ccFromStr__(ccLimit:str) -> int:
+    cc = ""
+    for i in range(len(ccLimit)): 
+        cc = cc + str(ord(ccLimit[i]) - 97)
+    return int(cc)
+
 def __encrypt__(encrypted: list) -> str:
     ccLimit = encrypted.pop(0)
     dictionary = __dictionary__(ccLimit)
-    encryptedText = str(ccLimit) + "_"
+    encryptedText = __ccToStr__(ccLimit) + "x"
     for char in encrypted: encryptedText = encryptedText + dictionary[char]
     return encryptedText
 
 def __decrypt__(encrypted: str) -> list:
     try: 
-        _index = encrypted.index("_")
-        ccLimit = int(encrypted[0:_index])
+        _index = encrypted.index("x")
+        ccLimit = __ccFromStr__(encrypted[0:_index])
     except: 
         _index = 0
         ccLimit = 255
@@ -158,7 +172,7 @@ class Cryptography:
             else:
                 self.frequencyRangeNullMax = frequencyMin
                 self.frequencyRangeNullMin = frequencyMax
-            if self.frequencyRangeNullMax == 0: self.frequencyRangeNullMax = 1
+            #if self.frequencyRangeNullMax == 0: self.frequencyRangeNullMax = 1
 
     def __encryptChar__(self, character:str, iteration:int, ccLimit:int, falseEncrypt:bool) -> int:
         crypto = -1
@@ -223,7 +237,7 @@ class Cryptography:
             textEncrypted = []
             ecfmax = self.frequencyRangeNullMax
             ecfmin = self.frequencyRangeNullMin
-            ccLimit = __getMaxCharId__(text)
+            ccLimit = __getMaxCharId__(text, self.frequencyRangeNullMax != self.frequencyRangeNullMin)
             textEncrypted.append(ccLimit)
             r = randint(ecfmin, ecfmax) - ecfmin
             _chr = 0
@@ -246,10 +260,12 @@ if __name__ == "__main__":
     print("Write the password to encrypt the text")
     psw = input(" -> ")
 
-    cr = Cryptography(psw)
+    cr = Cryptography(psw, 5, 5)
     
     encrypted = cr.encrypt(text)
     print(encrypted)
 
     decrypted = cr.decrypt(encrypted)
     print(decrypted)
+
+    input()

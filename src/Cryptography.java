@@ -43,8 +43,7 @@ public class CryptographyClass {
             frequencyRangeNullMax = frequencyMin;
             frequencyRangeNullMin = frequencyMax;
         }
-        if(frequencyRangeNullMax == 0) 
-            frequencyRangeNullMax = 1;
+        //if(frequencyRangeNullMax == 0) frequencyRangeNullMax = 1;
     }
 
     // <editor-fold defaultstate="collapsed" desc="Initialize atributes">
@@ -141,7 +140,7 @@ public class CryptographyClass {
     public String encrypt(final String text) {
         final int ecfmax = frequencyRangeNullMax;
         final int ecfmin = frequencyRangeNullMin;
-        final int ccLimit = getMaxCharInText(text);
+        final int ccLimit = getMaxCharInText(text, frequencyRangeNullMax != frequencyRangeNullMin);
         java.util.Random randomize = new java.util.Random(System.currentTimeMillis());
         final java.util.ArrayList<Integer> encrypted = new java.util.ArrayList<>();
         encrypted.add(ccLimit);
@@ -188,7 +187,7 @@ public class CryptographyClass {
         }
     }
 
-    private int getMaxCharInText(String text) {
+    private int getMaxCharInText(String text, boolean randomize) {
         int maxChar = 0;
         try {
             if (text.length() > 0) {
@@ -201,8 +200,9 @@ public class CryptographyClass {
             maxChar = 255;
         }
         if(maxChar < CC_START) maxChar = 255;
-        java.util.Random randomize = new java.util.Random(System.currentTimeMillis());
-        maxChar += (randomize.nextInt(MAX_CHARACTERS)) + CC_START;
+        java.util.Random randomint = new java.util.Random(System.currentTimeMillis());
+        maxChar += CC_START;
+        if (randomize == true) maxChar += (randomint.nextInt(MAX_CHARACTERS));
         return maxChar;
     }
 
@@ -287,22 +287,44 @@ public class CryptographyClass {
         return dictionary;
     }
 
+    private String _ccToStr(int ccLimit) {
+        String numeroComoString = String.valueOf(ccLimit);
+        StringBuilder letras = new StringBuilder();
+        for (int i = 0; i < numeroComoString.length(); i++) {
+            char digito = numeroComoString.charAt(i);
+            int valorNumerico = Character.getNumericValue(digito);
+            char letra = (char) (97 + valorNumerico);
+            letras.append(letra);
+        }
+        return letras.toString();
+    }
+
+    private int _ccFromStr(String ccLimit) {
+        StringBuilder numero = new StringBuilder();
+        for (int i = 0; i < ccLimit.length(); i++) {
+            char letra = ccLimit.charAt(i);
+            int valorNumerico = letra - 'a';
+            numero.append(valorNumerico);
+        }
+        return Integer.parseInt(numero.toString());
+    }
+
     private String _encrypt(java.util.ArrayList<Integer> encrypted) {
         int ccLimit = encrypted.get(0);
         final java.util.ArrayList<String> dictionary = _dictionary(ccLimit, true);
-        String encryptedText = String.valueOf(ccLimit) + "_";
+        String encryptedText = _ccToStr(ccLimit) + "x"; //String.valueOf(ccLimit) + "_";
         for (int i = 1; i < encrypted.size(); i++)
             encryptedText += dictionary.get(encrypted.get(i));
         return encryptedText;
     }
 
     private int[] _decrypt(String encrypted) { 
-        final int ccLimit = Integer.parseInt(encrypted.substring(0, encrypted.indexOf("_")));
+        final int ccLimit = _ccFromStr(encrypted.substring(0, encrypted.indexOf("x")));
         final java.util.ArrayList<String> dictionary = _dictionary(ccLimit, false);
         final int lettersGroup = dictionary.get(0).length();
-        int[] encryptedList = new int[(encrypted.length() - encrypted.indexOf("_")) / lettersGroup + 1];
+        int[] encryptedList = new int[(encrypted.length() - encrypted.indexOf("x")) / lettersGroup + 1];
         encryptedList[0] = ccLimit;
-        for (int l = encrypted.indexOf("_")+1, i = 1; l < encrypted.length(); l += lettersGroup, i++) {
+        for (int l = encrypted.indexOf("x")+1, i = 1; l < encrypted.length(); l += lettersGroup, i++) {
             String letter = encrypted.substring(l,l+lettersGroup);
             int e = dictionary.indexOf(letter.toUpperCase());
             encryptedList[i] = e;
